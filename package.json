@@ -2,10 +2,10 @@
   "name": "colorful-mermaid",
   "displayName": "Colorful Mermaid",
   "description": "A VSCode extension for Mermaid diagrams with syntax highlighting and linting.",
-  "version": "0.0.3",
-  "publisher": "your-publisher-name",
+  "version": "0.0.4",
+  "publisher": "cheonglol",
   "engines": {
-    "vscode": "^1.50.0"
+    "vscode": "^1.97.0"
   },
   "categories": [
     "Programming Languages"
@@ -13,12 +13,7 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "colorful-mermaid-cheonglol.helloWorld",
-        "title": "Hello World"
-      }
-    ],
+    "commands": [],
     "languages": [
       {
         "id": "mermaid",
