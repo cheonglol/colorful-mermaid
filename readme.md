@@ -23,6 +23,10 @@ This extension does not contribute any settings.
 
 ## Release Notes
 
+### 0.0.6
+
+- Added auto-closing pairs for brackets, parentheses, and quotes
+
 ### 0.0.5
 
 - image for the marketplace 🥰🥰🥰
