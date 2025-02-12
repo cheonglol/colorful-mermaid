@@ -1,0 +1,36 @@
+{
+  "scopeName": "source.mermaid",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#keyword"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.mermaid",
+          "begin": "//",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.mermaid"
+            }
+          },
+          "end": "$",
+          "name": "comment.line.double-slash.mermaid"
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        {
+          "name": "keyword.control.mermaid",
+          "match": "\\b(graph|subgraph|end|classDef|class|linkStyle|click|style|interpolate)\\b"
+        }
+      ]
+    }
+  }
+}
