@@ -1,5 +1,8 @@
 # colorful-mermaid-cheonglol README
 
+![(lame no colors!!!)](https://github.com/user-attachments/assets/04c3ec20-39ca-4886-82bd-a73ae6be2e85)
+
+
 This Visual Studio Code extension provides linting support for Mermaid diagram (.mmd) files. It helps you catch syntax errors and other issues in your Mermaid diagrams directly within the code editor, ensuring your diagrams are correctly formatted and error-free.
 
 ## Features
@@ -20,6 +23,9 @@ This extension does not contribute any settings.
 - None at the moment
 
 ## Release Notes
+
+### 0.0.4
+- whatever it works now (ill make it check for errors next time)
 
 ### 0.0.1
 
