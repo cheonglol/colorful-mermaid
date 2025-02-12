@@ -2,7 +2,6 @@
 
 ![(lame no colors!!!)](https://github.com/user-attachments/assets/04c3ec20-39ca-4886-82bd-a73ae6be2e85)
 
-
 This Visual Studio Code extension provides linting support for Mermaid diagram (.mmd) files. It helps you catch syntax errors and other issues in your Mermaid diagrams directly within the code editor, ensuring your diagrams are correctly formatted and error-free.
 
 ## Features
@@ -24,7 +23,12 @@ This extension does not contribute any settings.
 
 ## Release Notes
 
+### 0.0.5
+
+- image for the marketplace 🥰🥰🥰
+
 ### 0.0.4
+
 - whatever it works now (ill make it check for errors next time)
 
 ### 0.0.1
@@ -41,5 +45,5 @@ Ensure that you've read through the extensions guidelines and follow the best pr
 
 ## For more information
 
-- [Visual Studio Code's Mermaid Support](https://mermaid-js.github.io/mermaid/#/)
+- [Visual Studio Code&#39;s Mermaid Support](https://mermaid-js.github.io/mermaid/#/)
 - [Mermaid Syntax Reference](https://mermaid-js.github.io/mermaid/#/syntax)
