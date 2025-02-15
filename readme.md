@@ -21,26 +21,6 @@ This extension does not contribute any settings.
 
 - None at the moment
 
-## Release Notes
-
-### 0.0.6
-
-- Added auto-closing pairs for brackets, parentheses, and quotes
-
-### 0.0.5
-
-- image for the marketplace 🥰🥰🥰
-
-### 0.0.4
-
-- whatever it works now (ill make it check for errors next time)
-
-### 0.0.1
-
-- Initial release
-
----
-
 ## Following extension guidelines
 
 Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.

@@ -11,6 +11,24 @@
       "include": "#sequenceDiagram"
     },
     {
+      "include": "#flowChart"
+    },
+    {
+      "include": "#ganttChart"
+    },
+    {
+      "include": "#pieChart"
+    },
+    {
+      "include": "#stateDiagram"
+    },
+    {
+      "include": "#entityRelationshipDiagram"
+    },
+    {
+      "include": "#journeyDiagram"
+    },
+    {
       "include": "#string"
     },
     {
@@ -48,6 +66,14 @@
         {
           "name": "entity.name.class.mermaid",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "variable.other.attribute.mermaid",
+          "match": "\\b\\+?[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "storage.type.attribute.mermaid",
+          "match": "\\b(string|int|void|String)\\b"
         }
       ]
     },
@@ -55,11 +81,100 @@
       "patterns": [
         {
           "name": "keyword.control.sequenceDiagram.mermaid",
-          "match": "\\b(sequenceDiagram|participant|->|-->>|note|activate|deactivate|destroy|autonumber|title|section|loop|alt|opt|par|rect|end)\\b"
+          "match": "\\b(sequenceDiagram|participant|actor|autonumber|title|section|alt|else|loop|par|rect|opt|note|end|activate|deactivate|destroy|->>|-->>|--x|-x|->|-->)\\b"
         },
         {
           "name": "entity.name.participant.mermaid",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "string.quoted.double.mermaid",
+          "begin": ":",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.sequenceDiagram.mermaid"
+            }
+          },
+          "end": "$",
+          "patterns": [
+            {
+              "name": "string.quoted.double.mermaid",
+              "begin": "\"",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.definition.string.begin.mermaid"
+                }
+              },
+              "end": "\"",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.definition.string.end.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "name": "constant.character.escape.mermaid",
+                  "match": "\\\\."
+                }
+              ]
+            },
+            {
+              "name": "string.unquoted.mermaid",
+              "match": ".+"
+            }
+          ]
+        }
+      ]
+    },
+    "flowChart": {
+      "patterns": [
+        {
+          "name": "keyword.control.flowChart.mermaid",
+          "match": "\\b(graph|TD|LR|TB|RL|BT|subgraph|end|style|linkStyle|classDef|class|click|hover|interpolate)\\b"
+        },
+        {
+          "name": "entity.name.flowChart.mermaid",
+          "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "ganttChart": {
+      "patterns": [
+        {
+          "name": "keyword.control.ganttChart.mermaid",
+          "match": "\\b(gantt|title|dateFormat|section|todayMarker|excludes|axisFormat)\\b"
+        }
+      ]
+    },
+    "pieChart": {
+      "patterns": [
+        {
+          "name": "keyword.control.pieChart.mermaid",
+          "match": "\\b(pie|title|showData|data)\\b"
+        }
+      ]
+    },
+    "stateDiagram": {
+      "patterns": [
+        {
+          "name": "keyword.control.stateDiagram.mermaid",
+          "match": "\\b(stateDiagram|state|[*]|-->|-x-|--x-|<--|<->|<-->|note|as|hide|show|fork|join|end|choice|opt|alt|loop|par|rect|direction)\\b"
+        }
+      ]
+    },
+    "entityRelationshipDiagram": {
+      "patterns": [
+        {
+          "name": "keyword.control.entityRelationshipDiagram.mermaid",
+          "match": "\\b(erDiagram|entity|relationship)\\b"
+        }
+      ]
+    },
+    "journeyDiagram": {
+      "patterns": [
+        {
+          "name": "keyword.control.journeyDiagram.mermaid",
+          "match": "\\b(journey|title|section)\\b"
         }
       ]
     },
