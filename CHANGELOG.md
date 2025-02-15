@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.8
+
+- Improved syntax highlighting, added support for additional keywords and operators in various diagram types.
+- Improved attribute and function highlighting in class diagrams.
+
 ## 0.0.7
 
 - Added support for new diagram types: sequence diagrams, flow charts, Gantt charts, pie charts, state diagrams, entity-relationship diagrams, and journey diagrams.

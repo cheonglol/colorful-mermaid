@@ -3,7 +3,7 @@
   "name": "colorful-mermaid",
   "displayName": "Colorful Mermaid",
   "description": "A VSCode extension for Mermaid diagrams with syntax highlighting and linting.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/cheonglol/colorful-mermaid.git"

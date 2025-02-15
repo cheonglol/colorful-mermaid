@@ -69,11 +69,19 @@
         },
         {
           "name": "variable.other.attribute.mermaid",
-          "match": "\\b\\+?[a-zA-Z_][a-zA-Z0-9_]*\\b"
+          "match": "(\\+|\\-|\\#|\\*)\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
         },
         {
           "name": "storage.type.attribute.mermaid",
           "match": "\\b(string|int|void|String)\\b"
+        },
+        {
+          "name": "variable.other.attribute.name.mermaid",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "variable.other.attribute.full.mermaid",
+          "match": "(\\+string |\\+int |\\+void |\\+String )"
         }
       ]
     },
@@ -81,11 +89,15 @@
       "patterns": [
         {
           "name": "keyword.control.sequenceDiagram.mermaid",
-          "match": "\\b(sequenceDiagram|participant|actor|autonumber|title|section|alt|else|loop|par|rect|opt|note|end|activate|deactivate|destroy|->>|-->>|--x|-x|->|-->)\\b"
+          "match": "\\b(sequenceDiagram|participant|actor|autonumber|title|section|alt|else|loop|par|rect|opt|note|end|activate|deactivate|destroy)\\b"
         },
         {
           "name": "entity.name.participant.mermaid",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "keyword.operator.sequenceDiagram.mermaid",
+          "match": "(->>|-->>|--x|-x|->|-->)"
         },
         {
           "name": "string.quoted.double.mermaid",
@@ -133,8 +145,75 @@
           "match": "\\b(graph|TD|LR|TB|RL|BT|subgraph|end|style|linkStyle|classDef|class|click|hover|interpolate)\\b"
         },
         {
-          "name": "entity.name.flowChart.mermaid",
+          "name": "entity.name.flowChart.node.mermaid",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "keyword.operator.flowChart.mermaid",
+          "match": "(-->|-.->|-.->|==>|==)"
+        },
+        {
+          "name": "string.quoted.double.flowChart.mermaid",
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flowChart.mermaid"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flowChart.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.flowChart.mermaid",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.flowChart.condition.mermaid",
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flowChart.mermaid"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flowChart.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.flowChart.mermaid",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.flowChart.label.mermaid",
+          "begin": "\\|",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.flowChart.mermaid"
+            }
+          },
+          "end": "\\|",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.flowChart.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.flowChart.mermaid",
+              "match": "\\\\."
+            }
+          ]
         }
       ]
     },
@@ -158,7 +237,31 @@
       "patterns": [
         {
           "name": "keyword.control.stateDiagram.mermaid",
-          "match": "\\b(stateDiagram|state|[*]|-->|-x-|--x-|<--|<->|<-->|note|as|hide|show|fork|join|end|choice|opt|alt|loop|par|rect|direction)\\b"
+          "match": "\\b(stateDiagram|state|[*]|note|as|hide|show|fork|join|end|choice|opt|alt|loop|par|rect|direction)\\b"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "-->"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "-x-"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "--x-"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "<--"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "<->"
+        },
+        {
+          "name": "keyword.operator.stateDiagram.arrow.mermaid",
+          "match": "<-->"
         }
       ]
     },
