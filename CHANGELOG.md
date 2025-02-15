@@ -2,8 +2,9 @@
 
 ## 0.0.8
 
-- Improved syntax highlighting, added support for additional keywords and operators in various diagram types.
+- Improved syntax highlighting, added support for additional keywords and operators in various diagram types. (some are still shit, issues on gh)
 - Improved attribute and function highlighting in class diagrams.
+- sequenceDiagram seems alright for now
 
 ## 0.0.7
 
