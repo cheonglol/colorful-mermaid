@@ -5,7 +5,10 @@
       "include": "#comment"
     },
     {
-      "include": "#keyword"
+      "include": "#classDiagram"
+    },
+    {
+      "include": "#sequenceDiagram"
     },
     {
       "include": "#string"
@@ -36,11 +39,27 @@
         }
       ]
     },
-    "keyword": {
+    "classDiagram": {
       "patterns": [
         {
-          "name": "keyword.control.mermaid",
-          "match": "\\b(graph|subgraph|end|classDef|class|linkStyle|click|style|interpolate)\\b"
+          "name": "keyword.control.classDiagram.mermaid",
+          "match": "\\b(classDiagram|class|<|--|\\+|\\-|\\#|\\*)\\b"
+        },
+        {
+          "name": "entity.name.class.mermaid",
+          "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "sequenceDiagram": {
+      "patterns": [
+        {
+          "name": "keyword.control.sequenceDiagram.mermaid",
+          "match": "\\b(sequenceDiagram|participant|->|-->>|note|activate|deactivate|destroy|autonumber|title|section|loop|alt|opt|par|rect|end)\\b"
+        },
+        {
+          "name": "entity.name.participant.mermaid",
+          "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
         }
       ]
     },
