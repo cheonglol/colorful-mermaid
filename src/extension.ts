@@ -1,5 +1,5 @@
-import * as mermaid from 'mermaid';
 import * as vscode from 'vscode';
+import mermaid from 'mermaid'
 
 export function activate(context: vscode.ExtensionContext) {
   const diagnosticCollection = vscode.languages.createDiagnosticCollection('mermaid');
@@ -19,7 +19,7 @@ async function lintDocument(document: vscode.TextDocument, diagnosticCollection:
   const diagnostics: vscode.Diagnostic[] = [];
 
   try {
-    mermaid.default.parse(text);
+    await mermaid.parse(text);
   } catch (error) {
     const diagnostic = new vscode.Diagnostic(
       new vscode.Range(0, 0, document.lineCount, 0),
