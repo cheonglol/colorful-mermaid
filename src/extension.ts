@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { parse, type Pie } from '@mermaid-js/parser'
+import { parse, type GitGraph, type Pie } from '@mermaid-js/parser'
 
 export function activate(context: vscode.ExtensionContext) {
   const diagnosticCollection =
@@ -28,6 +28,13 @@ export function activate(context: vscode.ExtensionContext) {
   )
 }
 
+const SUPPORTED_TYPES: Array<string> = [
+  'info',
+  'gitGraph',
+  'pie',
+  'architecture',
+]
+
 async function lintDocument(
   document: vscode.TextDocument,
   diagnosticCollection: vscode.DiagnosticCollection
@@ -40,22 +47,19 @@ async function lintDocument(
   const diagnostics: vscode.Diagnostic[] = []
 
   try {
-    // const regularMermaid = await mermaid.parse(text)
-
-    const supportedTypes: Array<string> = [
-      'info',
-      'gitGraph',
-      'pie',
-      'architecture',
-    ]
-
+    const firstLine = text.split('\n')[0].trim().toLowerCase()
     if (
-      !supportedTypes.some((supportedGraph) => text.includes(supportedGraph))
+      !SUPPORTED_TYPES.some((supportedGraph) =>
+        firstLine.includes(supportedGraph)
+      )
     ) {
       return
     }
+    const diagramType = SUPPORTED_TYPES.find((type) => firstLine.includes(type))
 
-    const result = await parse('pie', text)
+    if (!diagramType) return
+
+    const result = await parse(diagramType as any, text)
     console.log(result)
   } catch (error) {
     const diagnostic = new vscode.Diagnostic(
@@ -77,12 +81,19 @@ async function formatMermaidDocument(
 
   try {
     // Check diagram type first
-    const firstLine = text.split('\n')[0].trim().toLowerCase()
-    if (!firstLine.includes('pie')) {
+    const firstLine = text.split('\n')[0].trim()
+    if (
+      !SUPPORTED_TYPES.some((supportedGraph) =>
+        firstLine.includes(supportedGraph)
+      )
+    ) {
       return [] // Return no edits for unsupported types
     }
+    const type = SUPPORTED_TYPES.find((supportedGraph) =>
+      firstLine.includes(supportedGraph)
+    )
 
-    const ast = await parse('pie', text) // Add await here
+    const ast = await parse(type as 'pie', text) // Add await here
     const formattedText = formatAst(ast)
 
     // Only apply formatting if we got a valid result
@@ -102,13 +113,28 @@ async function formatMermaidDocument(
 
   return edits
 }
+function formatGitGraph(ast: GitGraph) {
+  let result = 'gitGraph '
 
-function formatAst(ast: Pie): string {
-  // Simple validation
-  if (!ast || !ast.$type) {
-    return ''
+  // Format title if present
+  if (ast.title) {
+    result += `    title ${ast.title}\n`
   }
 
+  // Process each section/data point
+  if (ast.statements && Array.isArray(ast.statements)) {
+    for (const section of ast.statements) {
+      if (section.$container.statements !== undefined) {
+        // Format each section with proper indentation
+        result += `    ${section.$container.statements.join('')}\n`
+      }
+    }
+  }
+
+  // Remove trailing newline and return
+  return result.trimEnd()
+}
+function formatPie(ast: Pie) {
   let result = 'pie '
 
   // Format title if present
@@ -128,6 +154,20 @@ function formatAst(ast: Pie): string {
 
   // Remove trailing newline and return
   return result.trimEnd()
+}
+
+function formatAst(ast: Pie | GitGraph): string {
+  // Simple validation
+  if (!ast || !ast.$type) {
+    return ''
+  }
+  switch (ast.$type) {
+    case 'Pie':
+      return formatPie(ast)
+    case 'Direction':
+    case 'GitGraph':
+      return formatGitGraph(ast)
+  }
 }
 
 export function deactivate() {}
