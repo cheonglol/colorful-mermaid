@@ -1,35 +1,116 @@
-import * as mermaid from 'mermaid';
-import * as vscode from 'vscode';
+import {
+  ExtensionContext,
+  Uri,
+  DiagnosticCollection,
+  languages,
+  TextDocument,
+  Diagnostic,
+  DiagnosticSeverity,
+  Position,
+  Range,
+  workspace,
+} from 'vscode'
+import { Language, Parser, Node } from 'web-tree-sitter'
+import vscode from 'vscode'
 
-export function activate(context: vscode.ExtensionContext) {
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection('mermaid');
-  context.subscriptions.push(diagnosticCollection);
+let diagnosticCollection: DiagnosticCollection
 
-  vscode.workspace.onDidOpenTextDocument(doc => lintDocument(doc, diagnosticCollection));
-  vscode.workspace.onDidChangeTextDocument(event => lintDocument(event.document, diagnosticCollection));
-  vscode.workspace.onDidSaveTextDocument(doc => lintDocument(doc, diagnosticCollection));
-}
-
-async function lintDocument(document: vscode.TextDocument, diagnosticCollection: vscode.DiagnosticCollection) {
-  if (document.languageId !== 'mermaid') {
-    return;
-  }
-
-  const text = document.getText();
-  const diagnostics: vscode.Diagnostic[] = [];
-
+export async function activate(context: ExtensionContext) {
   try {
-    mermaid.default.parse(text);
-  } catch (error) {
-    const diagnostic = new vscode.Diagnostic(
-      new vscode.Range(0, 0, document.lineCount, 0),
-      (error as Error).message,
-      vscode.DiagnosticSeverity.Error
-    );
-    diagnostics.push(diagnostic);
-  }
+    await Parser.init()
 
-  diagnosticCollection.set(document.uri, diagnostics);
+    // Create diagnostic collection
+    diagnosticCollection =
+      languages.createDiagnosticCollection('mermaid-syntax')
+    context.subscriptions.push(diagnosticCollection)
+
+    const wasmUri = Uri.joinPath(
+      context.extensionUri,
+      'tree-sitter-mermaid.wasm'
+    ).fsPath
+
+    const Mermaid = await Language.load(wasmUri)
+    const parser = new Parser()
+    parser.setLanguage(Mermaid)
+
+    // Register event handlers for diagnostics
+    context.subscriptions.push(
+      workspace.onDidChangeTextDocument((event) => {
+        analyzeDiagnostics(event.document, parser)
+      }),
+      workspace.onDidOpenTextDocument((document) => {
+        analyzeDiagnostics(document, parser)
+      })
+    )
+
+    // Initial analysis of active editor
+    if (vscode.window.activeTextEditor) {
+      analyzeDiagnostics(vscode.window.activeTextEditor.document, parser)
+    }
+  } catch (error) {
+    console.error('Failed to initialize Tree-sitter:', error)
+  }
 }
 
-export function deactivate() { }
+function analyzeDiagnostics(document: TextDocument, parser: Parser) {
+  // Only analyze Mermaid files
+  if (document.languageId !== 'mermaid') {
+    return
+  }
+
+  const text = document.getText()
+  const tree = parser.parse(text)
+  const diagnostics: Diagnostic[] = []
+
+  // Recursively check for ERROR and MISSING nodes
+  function visitNode(node: Node) {
+    if (node.hasError) {
+      const range = new Range(
+        new Position(node.startPosition.row, node.startPosition.column),
+        new Position(node.endPosition.row, node.endPosition.column)
+      )
+
+      // Create diagnostic
+      const diagnostic = new Diagnostic(
+        range,
+        createDiagnosticMessage(node),
+        DiagnosticSeverity.Error
+      )
+      diagnostic.source = 'mermaid-syntax'
+
+      diagnostics.push(diagnostic)
+    }
+
+    // Visit children
+    for (let child of node.children) {
+      if (child) visitNode(child)
+    }
+  }
+
+  tree?.rootNode && visitNode(tree?.rootNode)
+  diagnosticCollection.set(document.uri, diagnostics)
+}
+
+function createDiagnosticMessage(node: Node): string {
+  let message = node.hasError ? `Missing '${node.type}'` : 'Syntax error'
+
+  // Add context from parent node
+  const parent = node.parent
+  if (parent && parent.type !== 'ERROR') {
+    message += ` in ${parent.type}`
+  }
+
+  // Add context from previous sibling
+  const previousSibling = node.previousSibling
+  if (previousSibling && previousSibling.type !== 'ERROR') {
+    message += ` after ${previousSibling.type}`
+  }
+
+  return message
+}
+
+export function deactivate() {
+  if (diagnosticCollection) {
+    diagnosticCollection.dispose()
+  }
+}
