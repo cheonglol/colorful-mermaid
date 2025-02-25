@@ -15,7 +15,9 @@
   "categories": [
     "Programming Languages"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [],
@@ -27,7 +29,8 @@
           "mermaid"
         ],
         "extensions": [
-          ".mmd"
+          ".mmd",
+          ".mermaid"
         ],
         "configuration": "./language-configuration.json"
       }
@@ -37,6 +40,16 @@
         "language": "mermaid",
         "scopeName": "source.mermaid",
         "path": "./syntaxes/mermaid.tmLanguage.json"
+      },
+      {
+        "scopeName": "markdown.mermaid.codeblock",
+        "path": "./syntaxes/mermaid-markdown.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.mermaid": "mermaid"
+        }
       }
     ]
   },
