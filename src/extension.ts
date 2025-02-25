@@ -10,7 +10,7 @@ import {
   Range,
   workspace,
 } from 'vscode'
-import { Language, Parser, Node } from 'web-tree-sitter'
+import { Language, Parser, Node, type Tree } from 'web-tree-sitter'
 import vscode from 'vscode'
 
 let diagnosticCollection: DiagnosticCollection
@@ -53,24 +53,87 @@ export async function activate(context: ExtensionContext) {
 }
 
 function analyzeDiagnostics(document: TextDocument, parser: Parser) {
-  // Only analyze Mermaid files
-  if (document.languageId !== 'mermaid') {
+  // Handle both .mermaid files and markdown files with mermaid code blocks
+  if (document.languageId !== 'mermaid' && document.languageId !== 'markdown') {
     return
   }
 
-  const text = document.getText()
-  const tree = parser.parse(text)
   const diagnostics: Diagnostic[] = []
 
-  // Recursively check for ERROR and MISSING nodes
+  if (document.languageId === 'markdown') {
+    // Process markdown file for mermaid code blocks
+    const text = document.getText()
+    const mermaidBlocks = findMermaidCodeBlocks(text)
+
+    mermaidBlocks.forEach((block) => {
+      const tree = parser.parse(block.content)
+      if (!tree) return
+      processTree(tree, block.startLine, diagnostics, document)
+    })
+  } else {
+    // Process regular mermaid file
+    const text = document.getText()
+    const tree = parser.parse(text)
+
+    if (!tree) return
+    processTree(tree, 0, diagnostics, document)
+  }
+
+  diagnosticCollection.set(document.uri, diagnostics)
+}
+
+interface CodeBlock {
+  content: string
+  startLine: number
+  endLine: number
+}
+
+function findMermaidCodeBlocks(text: string): CodeBlock[] {
+  const blocks: CodeBlock[] = []
+  const lines = text.split('\n')
+  let inBlock = false
+  let currentBlock: CodeBlock | null = null
+
+  lines.forEach((line, index) => {
+    const trimmedLine = line.trim()
+    if (trimmedLine.startsWith('```mermaid')) {
+      inBlock = true
+      currentBlock = {
+        content: '',
+        startLine: index + 1,
+        endLine: -1,
+      }
+    } else if (trimmedLine === '```' && inBlock) {
+      if (currentBlock) {
+        currentBlock.endLine = index - 1
+        blocks.push(currentBlock)
+      }
+      inBlock = false
+      currentBlock = null
+    } else if (inBlock && currentBlock) {
+      currentBlock.content += line + '\n'
+    }
+  })
+
+  return blocks
+}
+
+function processTree(
+  tree: Tree,
+  lineOffset: number,
+  diagnostics: Diagnostic[],
+  document: TextDocument
+) {
   function visitNode(node: Node) {
     if (node.hasError) {
       const range = new Range(
-        new Position(node.startPosition.row, node.startPosition.column),
-        new Position(node.endPosition.row, node.endPosition.column)
+        new Position(
+          node.startPosition.row + lineOffset,
+          node.startPosition.column
+        ),
+        new Position(node.endPosition.row + lineOffset, node.endPosition.column)
       )
 
-      // Create diagnostic
       const diagnostic = new Diagnostic(
         range,
         createDiagnosticMessage(node),
@@ -81,14 +144,12 @@ function analyzeDiagnostics(document: TextDocument, parser: Parser) {
       diagnostics.push(diagnostic)
     }
 
-    // Visit children
     for (let child of node.children) {
       if (child) visitNode(child)
     }
   }
 
-  tree?.rootNode && visitNode(tree?.rootNode)
-  diagnosticCollection.set(document.uri, diagnostics)
+  tree.rootNode && visitNode(tree.rootNode)
 }
 
 function createDiagnosticMessage(node: Node): string {

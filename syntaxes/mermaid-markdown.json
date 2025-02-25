@@ -1,0 +1,33 @@
+{
+  "scopeName": "markdown.mermaid.codeblock",
+  "injectionSelector": "L:text.html.markdown",
+  "patterns": [
+    {
+      "include": "#mermaid-code-block"
+    }
+  ],
+  "repository": {
+    "mermaid-code-block": {
+      "name": "markup.fenced_code.block.markdown",
+      "begin": "(^|\\G)(\\s*)(\\`{3,}|~{3,})\\s*(?i:(mermaid)(?=\\s|$))",
+      "beginCaptures": {
+        "4": {
+          "name": "entity.name.type.markdown"
+        }
+      },
+      "end": "(^|\\G)(\\2|\\s{0,3})(\\3)\\s*$",
+      "patterns": [
+        {
+          "begin": "(^|\\G)(?=\\s*\\S)",
+          "while": "(^|\\G)(?!\\s*$|\\s*([`~]{3,})\\s*$)",
+          "contentName": "meta.embedded.block.mermaid",
+          "patterns": [
+            {
+              "include": "source.mermaid"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
