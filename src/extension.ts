@@ -10,8 +10,10 @@ import {
   Range,
   workspace,
 } from 'vscode'
-import { Language, Parser, Node, type Tree } from 'web-tree-sitter'
+import type { Node, Tree } from 'web-tree-sitter'
 import vscode from 'vscode'
+
+const { Language, Parser } = require('web-tree-sitter')
 
 let diagnosticCollection: DiagnosticCollection
 
@@ -52,7 +54,7 @@ export async function activate(context: ExtensionContext) {
   }
 }
 
-function analyzeDiagnostics(document: TextDocument, parser: Parser) {
+function analyzeDiagnostics(document: TextDocument, parser: typeof Parser) {
   // Handle both .mermaid files and markdown files with mermaid code blocks
   if (document.languageId !== 'mermaid' && document.languageId !== 'markdown') {
     return
