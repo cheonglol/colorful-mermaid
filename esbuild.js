@@ -1,7 +1,5 @@
 const esbuild = require('esbuild')
 
-
-
 const production = process.argv.includes('--production')
 const watch = process.argv.includes('--watch')
 
@@ -30,7 +28,7 @@ const esbuildProblemMatcherPlugin = {
 async function main() {
   const ctx = await esbuild.context({
     entryPoints: ['src/extension.ts'],
-    target:'es2024',
+    target: 'es2024',
     bundle: true,
     supported: {
       'import-meta': true,
@@ -41,7 +39,7 @@ async function main() {
     sourcesContent: false,
     platform: 'node',
     outfile: 'dist/extension.js',
-    external: ['vscode', 'web-tree-sitter'],
+    external: ['vscode'],
     logLevel: 'silent',
     plugins: [
       /* add to the end of plugins array */

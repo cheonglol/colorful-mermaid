@@ -3,7 +3,7 @@
   "name": "colorful-mermaid",
   "displayName": "Colorful Mermaid",
   "description": "A VSCode extension for Mermaid diagrams with syntax highlighting and linting.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/cheonglol/colorful-mermaid.git"
@@ -65,7 +65,8 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "postinstall": "cp node_modules/web-tree-sitter/tree-sitter.wasm dist"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
